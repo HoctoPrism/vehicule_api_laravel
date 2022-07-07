@@ -42,17 +42,6 @@ class PersonneController extends Controller
             'firstname' => 'required|max:100',
         ]);
 
-/*        $filename = "";
-        if ($request->hasFile('photoPersonne')) {
-            $filenameWithExt = $request->file('photoPersonne')->getClientOriginalName();
-            $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('photoPersonne')->getClientOriginalExtension();
-            $filename = $filenameWithoutExt . '_' . time() . '.' . $extension;
-            $path = $request->file('photoPersonne')->storeAs('public/uploads', $filename);
-        } else {
-            $filename = Null;
-        }*/
-
         $personne = Personne::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,

@@ -19,11 +19,6 @@ class TravelController extends Controller
     public function index(): JsonResponse
     {
         $travels = Travel::with(['personnes', 'vehicules'])->get();
- /*       $travels = DB::table('travels')
-            ->get()
-            ->toArray();*/
-
-
 
         return response()->json([
             'status' => 'Success',

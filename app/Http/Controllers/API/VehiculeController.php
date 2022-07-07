@@ -38,9 +38,21 @@ class VehiculeController extends Controller
             'name' => 'required|max:100',
         ]);
 
+        $filename = "";
+        if ($request->hasFile('image')) {
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = $filenameWithoutExt . '_' . time() . '.' . $extension;
+            $path = $request->file('image')->storeAs('public/uploads', $filename);
+        } else {
+            $filename = Null;
+        }
+
         $vehicule = Vehicule::create([
             'name' => $request->name,
             'type' => $request->type,
+            'image' => $filename
         ]);
 
         return response()->json([
