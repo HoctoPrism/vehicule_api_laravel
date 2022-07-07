@@ -75,6 +75,7 @@ class VehiculeController extends Controller
      *
      * @param Request $request
      * @param Vehicule $vehicule
+     * @param int $id
      * @return JsonResponse
      * @throws ValidationException
      */

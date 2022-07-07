@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Travel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class TravelController extends Controller
@@ -19,6 +18,12 @@ class TravelController extends Controller
     public function index(): JsonResponse
     {
         $travels = Travel::with(['personnes', 'vehicules'])->get();
+        $travels->map(function ($travel){
+            $travel['vehicules']->map(function ($voiture){
+                $voiture['type'] = $voiture['types'];
+                unset($voiture['types']);
+            });
+        });
 
         return response()->json([
             'status' => 'Success',
@@ -60,8 +65,13 @@ class TravelController extends Controller
      */
     public function show(Travel $travel): JsonResponse
     {
-        /*$travel->type = $travel->types()->get();*/
-        return response()->json($travel->load(['vehicules', 'personnes']));
+        $travel->load(['vehicules', 'personnes']);
+        $travel['vehicules']->map(function ($voiture){
+            $voiture['type'] = $voiture['types'];
+            unset($voiture['types']);
+        });
+
+        return response()->json($travel);
     }
 
     /**
