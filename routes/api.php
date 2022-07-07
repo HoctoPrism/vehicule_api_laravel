@@ -26,3 +26,4 @@ Route::apiResource("personnes", PersonneController::class);
 Route::apiResource("types", TypeController::class);
 Route::apiResource("vehicules", VehiculeController::class);
 Route::apiResource("travels", TravelController::class);
+Route::post("/vehicules/{id}",[VehiculeController::class, 'update'])->name('vehicules.update');
