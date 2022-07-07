@@ -41,11 +41,7 @@ class VehiculeController extends Controller
 
         $filename = "";
         if ($request->hasFile('image')) {
-            $filenameWithExt = $request->file('image')->getClientOriginalName();
-            $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = $filenameWithoutExt . '_' . time() . '.' . $extension;
-            $path = $request->file('image')->storeAs('public/uploads', $filename);
+            $filename = $this->getFilename($request);
         } else {
             $filename = Null;
         }
@@ -94,11 +90,7 @@ class VehiculeController extends Controller
             if (Vehicule::findOrFail($id)->image){
                 Storage::delete("/public/uploads/".Vehicule::findOrFail($id)->image);
             }
-            $filenameWithExt = $request->file('image')->getClientOriginalName();
-            $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = $filenameWithoutExt . '_' . time() . '.' . $extension;
-            $path = $request->file('image')->storeAs('public/uploads', $filename);
+            $filename = $this->getFilename($request);
             $updateVehicule['image'] = $filename;
         }
 
@@ -117,10 +109,28 @@ class VehiculeController extends Controller
      */
     public function destroy(Vehicule $vehicule): JsonResponse
     {
+        if ($vehicule->image){
+            Storage::delete("/public/uploads/".$vehicule->image);
+        }
+
         $vehicule->delete();
 
         return response()->json([
             'status' => 'Supprimer avec succès avec succèss'
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function getFilename(Request $request): string
+    {
+        $filenameWithExt = $request->file('image')->getClientOriginalName();
+        $filenameWithoutExt = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $filename = $filenameWithoutExt . '_' . time() . '.' . $extension;
+        $path = $request->file('image')->storeAs('public/uploads', $filename);
+        return $filename;
     }
 }
